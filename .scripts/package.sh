@@ -9,7 +9,8 @@ xcframeworks_repo="https://github.com/havebeenfitz/grpc-swift-xcframeworks"
 latest_release_number () {
     # Github cli to get the list of releases and filter using jq
     gh release list --repo $1 --limit 100 --exclude-pre-releases --exclude-drafts \
-    --jq ".[] | select(.tag_name | startswith('1.') | .tag_name" |
+    --jq ".[] | select(.tag_name | startswith('1.') | .tag_name" \
+    --json tagName |
     # Regex to find the version number (already constrained by jq)
     grep -Eo '[0-9]+\.[0-9]+\.[0-9]+' |
     # Take the first match in the regex
