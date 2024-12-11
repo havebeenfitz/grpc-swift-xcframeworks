@@ -9,7 +9,7 @@ xcframeworks_repo="https://github.com/havebeenfitz/grpc-swift-xcframeworks"
 latest_release_number () {
     # Github cli to get the list of releases and filter the 1.*.* releases using jq
     # TODO: migrate to 2.0.0 some day
-    gh release list --repo https://github.com/grpc/grpc-swift --limit 10 --json tagName \
+    gh release list --repo $1 --limit 10 --json tagName \
     --jq '.[] | select(.tagName | startswith("1.")) | .tagName' | head -1 \
     || echo '0.0.0'
 }
