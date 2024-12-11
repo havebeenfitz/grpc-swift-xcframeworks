@@ -1,19 +1,20 @@
-name: Publish Release
+name: Create Release
 
 on:
-  workflow_dispatch:
-  schedule:
-    - cron: '*/60 */2 * * *' # Every 2 hours
+  push:
+    tags:
 
 jobs:
-  build:
+  create_release:
+    name: Create Release
     runs-on: macos-latest
     steps:
-      - name: Checkout
-        uses: actions/checkout@v2
+      - uses: actions/checkout@v2
 
-      - name: Authorize
-        run: echo "${{ secrets.GITHUB_TOKEN }}" | gh auth login --with-token
+      - name: Create XCFramework
+        uses: unsignedapps/swift-create-xcframework@v2
 
       - name: Release
-        run: cd .scripts && sh ./package.sh
+        run: |
+          tag = $(echo "${{ vars.GITHUB_REF }}" | sed 's|refs/tags/||')
+          git clone https://github.com/grpc/grpc-swift/tree/$tag && cd grpc-swift && swift create-xcframework
