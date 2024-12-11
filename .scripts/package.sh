@@ -10,11 +10,8 @@ latest_release_number () {
     # Github cli to get the list of releases and filter the 1.*.* releases using jq
     # TODO: migrate to 2.0.0 some day
     gh release list --repo https://github.com/grpc/grpc-swift --limit 10 --json tagName \
-    --jq '.[] | select(.tagName | startswith("1.")) | .tagName' | head -1
-    # Regex to find the version number (already constrained by jq)
-    grep -Eo '[0-9]+\.[0-9]+\.[0-9]+' |
-    # Take the first match in the regex
-    head -1 || echo '0.0.0'
+    --jq '.[] | select(.tagName | startswith("1.")) | .tagName' | head -1 \
+    || echo '0.0.0'
 }
 
 xcframework_name () {
@@ -285,11 +282,14 @@ set -o pipefail
 latest=$(latest_release_number $main_framework_repo)
 current=$(latest_release_number $xcframeworks_repo)
 
+echo "Latest $main_framework_repo release: $latest"
+echo "Latest $xcframeworks_repo release: $current"
+
 # Args
 debug=$(echo $@ || "" | grep debug)
 skip_release=$(echo $@ || "" | grep skip-release)
 
-if [[ $latest != $current || $debug ]]; then
+if [[ $latest != "$current" || $debug ]]; then
     echo "$current is out of date. Updating to $latest..."
     distribution="dist"
     sources="Sources"
