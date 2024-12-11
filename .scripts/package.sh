@@ -7,10 +7,10 @@ main_framework_repo="https://github.com/grpc/grpc-swift"
 xcframeworks_repo="https://github.com/havebeenfitz/grpc-swift-xcframeworks"
 
 latest_release_number () {
-    # Github cli to get the list of releases and filter using jq
-    gh release list --repo $1 --limit 100 --exclude-pre-releases --exclude-drafts \
-    --jq ".[] | select(.tag_name | startswith(\"1.\") | .tag_name" \
-    --json tagName |
+    # Github cli to get the list of releases and filter the 1.*.* releases using jq
+    # TODO: migrate to 2.0.0 some day
+    gh release list --repo https://github.com/grpc/grpc-swift --limit 10 --json tagName \
+    --jq '.[] | select(.tagName | startswith("1.")) | .tagName' | head -1
     # Regex to find the version number (already constrained by jq)
     grep -Eo '[0-9]+\.[0-9]+\.[0-9]+' |
     # Take the first match in the regex
