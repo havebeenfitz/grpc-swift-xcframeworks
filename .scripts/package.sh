@@ -3,6 +3,8 @@
 # Adapted from https://github.com/akaffenberger/firebase-ios-sdk-xcframeworks/blob/master/.scripts/package.sh
 
 main_framework_name="GRPC"
+main_framework_repo="https://github.com/grpc/grpc-swift"
+xcframeworks_repo="https://github.com/havebeenfitz/grpc-swift-xcframeworks"
 
 latest_release_number () {
     # Github cli to get the list of releases and filter using jq
@@ -277,10 +279,6 @@ commit_changes() {
 # Exit when any command fails
 set -e
 set -o pipefail
-
-# Repos
-main_framework_repo="https://github.com/grpc/grpc-swift"
-xcframeworks_repo="https://github.com/havebeenfitz/grpc-swift-xcframeworks"
 
 # Release versions
 latest=$(latest_release_number $main_framework_repo)
